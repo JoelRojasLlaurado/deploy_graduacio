@@ -1,34 +1,39 @@
 services:
   backend:
-    image: joelrojasllauradoupc/backend-graduacio:1.0.1
+    image: joelrojasllauradoupc/backend-graduacio:1.1.0
     restart: unless-stopped
-    ports:
-      - "1337:1337"
+    expose:
+      - "1337"
     environment:
       MONGO_URI: mongodb://mongo:27017/graduacio
     depends_on:
       mongo:
         condition: service_healthy
     networks:
+      - proxy_net
       - mongo_net
 
   backoffice:
-    image: joelrojasllauradoupc/backoffice-graduacio:1.0.0
+    image: joelrojasllauradoupc/backoffice-graduacio:1.2.0
     restart: unless-stopped
-    ports:
-      - "4200:4200"
+    expose:
+      - "4200"
     depends_on:
       backend:
         condition: service_started
+    networks:
+      - proxy_net
 
   webapp:
-    image: joelrojasllauradoupc/webapp-graduacio:1.0.1
+    image: joelrojasllauradoupc/webapp-graduacio:1.0.2
     restart: unless-stopped
-    ports:
-      - "5173:5173"
+    expose:
+      - "5173"
     depends_on:
       backoffice:
         condition: service_started
+    networks:
+      - proxy_net
 
   mongo:
     image: mongo:7
@@ -46,6 +51,8 @@ services:
       - mongo_net
 
 networks:
+  proxy_net:
+    external: true
   mongo_net:
     internal: true
 
