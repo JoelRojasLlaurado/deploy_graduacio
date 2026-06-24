@@ -1,6 +1,6 @@
 services:
   backend:
-    image: joelrojasllauradoupc/backend-graduacio:1.1.0
+    image: joelrojasllauradoupc/backend-graduacio:1.3.0
     restart: unless-stopped
     ports:
       - "1337:1337"
@@ -10,6 +10,7 @@ services:
       mongo:
         condition: service_healthy
     networks:
+      - default
       - mongo_net
 
   backoffice:
